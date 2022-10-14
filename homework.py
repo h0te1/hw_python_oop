@@ -87,8 +87,8 @@ class SportsWalking(Training):
     def get_spent_calories(self) -> float:
         mspeed = self.get_mean_speed()  # средняя скорость обычная
         mspeed_in_m = mspeed * 1000 / 60
-        local_bracket = (mspeed_in_m**2 / (self.height / 100))  # сокращение
-        bracket = (0.035 * self.weight + local_bracket * 0.029 * self.weight)
+        lockal_bracket = (mspeed_in_m**2 / (self.height / 100))
+        bracket = (0.035 * self.weight + lockal_bracket * 0.029 * self.weight)
         return bracket * (self.duration * 60)
 
 
