@@ -85,10 +85,11 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        mspeed = self.get_mean_speed()  # средняя скорость
-        local_bracket = (mspeed**2 // self.height)  # тоже соеращение строки
-        bracket = (0.035 * self.weight + local_bracket * 0.029 * self.height)
-        return bracket * self.duration
+        mspeed = self.get_mean_speed()  # средняя скорость обычная
+        mspeed_in_m = mspeed * 1000 / 60
+        local_bracket = (mspeed_in_m**2 / (self.height / 100))  # сокращение
+        bracket = (0.035 * self.weight + local_bracket * 0.029 * self.weight)
+        return bracket * (self.duration * 60)
 
 
 class Swimming(Training):
