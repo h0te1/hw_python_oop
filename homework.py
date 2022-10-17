@@ -14,7 +14,7 @@ class InfoMessage:
 
     def get_message(self):
         return print(f"""Тип тренировки: {self.training_type};
-        Длительность: {self.duration} ч.;
+        Длительность: {round(self.duration,3)} ч.;
         Дистанция: {round(self.distance, 3)} км;
         Ср.скорость: {round(self.speed, 3)} км/ч;
         Потрачено ккал: {round(self.calories, 3)}.""")
@@ -86,7 +86,7 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         mspeed = self.get_mean_speed()  # средняя скорость обычная
-        mspeed_in_m = mspeed * 1000 / 60
+        mspeed_in_m = mspeed * (1000 / 3600)
         lockal_bracket = (mspeed_in_m**2 / (self.height / 100))
         bracket = (0.035 * self.weight + lockal_bracket * 0.029 * self.weight)
         return bracket * (self.duration * 60)
