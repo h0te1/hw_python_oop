@@ -88,7 +88,8 @@ class SportsWalking(Training):
         mspeed = self.get_mean_speed()  # средняя скорость обычная
         mspeed_in_m = mspeed * (1000 / 3600)
         lockal_bracket = (mspeed_in_m**2 / (self.height / 100))
-        bracket = (0.035 * self.weight + lockal_bracket * 0.029 * self.weight)
+        bracket_one = (lockal_bracket * 0.029 * self.weight)
+        bracket = ((0.035 * self.weight) + bracket_one)
         return bracket * (self.duration * 60)
 
 
