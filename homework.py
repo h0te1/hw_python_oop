@@ -75,6 +75,11 @@ class Running(Training):
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     LEN_STEP: float = 0.65
+    CALORIES_WEIGHT_MULTIPLIER: float = 0.035
+    CALORIES_SPEED_HEIGHT_MULTIPLIER: float = 0.029
+    M_IN_H: int = 60
+    KMH_IN_MSEC = 0.278
+    CM_IN_M = 100
 
     def __init__(self,
                  action: int,
@@ -85,12 +90,11 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        mspeed = self.get_mean_speed()  # средняя скорость обычная
-        mspeed_in_m = mspeed * (1000 / 3600)
-        lockal_bracket = (mspeed_in_m**2 / (self.height / 100))
-        bracket_one = (lockal_bracket * 0.029 * self.weight)
-        bracket = ((0.035 * self.weight) + bracket_one)
-        return bracket * (self.duration * 60)
+        return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
+                 + ((self.get_mean_speed() * self.KMH_IN_MSEC) ** 2
+                    / (self.height / self.CM_IN_M))
+                 * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
+                 * self.weight) * self.duration * self.M_IN_H)
 
 
 class Swimming(Training):
