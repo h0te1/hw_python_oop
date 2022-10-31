@@ -68,8 +68,8 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         mspeed = Running.get_mean_speed(self)  # средняя скорость
-        cal = (18*mspeed - 20)  # для сокращения строки
-        return cal * self.weight/Training.M_IN_KM * (self.duration * 60)
+        cal = (18 * mspeed - 20)  # для сокращения строки
+        return cal * self.weight / Training.M_IN_KM * (self.duration * 60)
 
 
 class SportsWalking(Training):
