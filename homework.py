@@ -2,10 +2,10 @@ class InfoMessage:
     """Информационное сообщение о тренировке."""
     def __init__(self,
                  training_type,
-                 duration,
-                 distance,
-                 speed,
-                 calories):
+                 duration: float,
+                 distance: float,
+                 speed: float,
+                 calories: float):
         self.training_type = training_type
         self.duration = duration
         self.distance = distance
@@ -13,21 +13,17 @@ class InfoMessage:
         self.calories = calories
 
     def get_message(self) -> str:
-        return print(f"""Тип тренировки: {self.training_type};
-        Длительность: {round(self.duration,3)} ч.;
-        Дистанция: {round(self.distance, 3)} км;
-        Ср.скорость: {round(self.speed, 3)} км/ч;
-        Потрачено ккал: {round(self.calories, 3)}.""")
-
-
-M_IN_KM: int = 1000
-MIN_IN_H: int = 60
-KMH_IN_MSEC = 0.278
+        return print(f'Тип тренировки: {self.training_type}; '
+                     f'Длительность: {round(self.duration,3)} ч.; '
+                     f'Дистанция: {round(self.distance, 3)} км; '
+                     f'Ср.скорость: {round(self.speed, 3)} км/ч; '
+                     f'Потрачено ккал: {round(self.calories, 3)}.')
 
 
 class Training:
     """Базовый класс тренировки."""
     LEN_STEP: float = 0.65
+    M_IN_KM: float = 1000
 
     def __init__(self,
                  action: float,
@@ -40,7 +36,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        return self.action * self.LEN_STEP / M_IN_KM
+        return self.action * self.LEN_STEP / self.M_IN_KM
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
@@ -64,8 +60,9 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
     LEN_STEP: float = 0.65
-    CALORIES_MEAN_SPEED_MULTIPLIER = 18
-    CALORIES_MEAN_SPEED_SHIFT = 1.79
+    CALORIES_MEAN_SPEED_MULTIPLIER: float = 18
+    CALORIES_MEAN_SPEED_SHIFT: float = 1.79
+    MIN_IN_H: float = 60
 
     def __init__(self,
                  action: int,
@@ -74,13 +71,12 @@ class Running(Training):
         super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
-        cal_per_minute: float = (
+        return (
             (
                 self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
                 + self.CALORIES_MEAN_SPEED_SHIFT
-            ) * self.weight / M_IN_KM
+            ) * self.weight / self.M_IN_KM * (self.duration * self.MIN_IN_H)
         )
-        return cal_per_minute * (self.duration * MIN_IN_H)
 
 
 class SportsWalking(Training):
@@ -90,6 +86,7 @@ class SportsWalking(Training):
     CALORIES_SPEED_HEIGHT_MULTIPLIER: float = 0.029
     M_IN_H: int = 60
     CM_IN_M = 100
+    KMH_IN_MSEC = 0.278
 
     def __init__(self,
                  action: int,
@@ -101,7 +98,7 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         return ((self.CALORIES_WEIGHT_MULTIPLIER * self.weight
-                 + ((self.get_mean_speed() * KMH_IN_MSEC) ** 2
+                 + ((self.get_mean_speed() * self.KMH_IN_MSEC) ** 2
                     / (self.height / self.CM_IN_M))
                  * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
                  * self.weight) * self.duration * self.M_IN_H)
@@ -111,7 +108,7 @@ class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP: float = 1.38
     CALORIES_MEAN_SPEED_SHIFT: float = 1.1
-    CALORIES_SPEED_WEIGHT_MULTIPLIER = 2
+    CALORIES_WEIGHT_MULTIPLIER: float = 2
 
     def __init__(self,
                  action: int,
@@ -125,12 +122,12 @@ class Swimming(Training):
 
     def get_mean_speed(self) -> float:
         m_in_pool = self.length_pool * self.count_pool
-        return m_in_pool / M_IN_KM / self.duration
+        return m_in_pool / self.M_IN_KM / self.duration
 
     def get_spent_calories(self) -> float:
         return (
             (self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT)
-            * self.CALORIES_SPEED_WEIGHT_MULTIPLIER * self.weight
+            * self.CALORIES_WEIGHT_MULTIPLIER * self.weight
             * self.duration
         )
 
